@@ -12,6 +12,7 @@ struct Game {
 const int n = 10;
 Game* games = new Game[n];
 int gameCount = 0;
+string PASSWORD = "admin1admin";
 
 void add(const string& name, const double& price, const int& stock) {
     if (gameCount < n) {
@@ -78,12 +79,19 @@ double calcvalue() {
 }
 
 string password (const string& pass){
-    if (pass == "admin1admin"){
+    if (pass == PASSWORD){
         return "correct";
     }
     else {
         return "wrong";
     }
+}
+
+void changepass (){
+    cout << "Your current password: " << PASSWORD << endl;
+    cout << "Please enter the new password: " << endl;
+    getline(cin,PASSWORD);
+    cout << "Your password successfully changed." << endl;
 }
 
 void admin_menu() {
@@ -95,7 +103,8 @@ void admin_menu() {
         cout << "4. Display All Games" << endl;
         cout << "5. Calculate Total Value" << endl;
         cout << "6. Stock Status" << endl;
-        cout << "7. Exit" << endl;
+        cout << "7. Change Password" << endl;
+        cout << "8. Exit" << endl;
         
         int choice;
         cin >> choice;
@@ -137,6 +146,9 @@ void admin_menu() {
                 stockStatus(); 
                 break;
             case 7:
+                changepass();
+                break;
+            case 8:
                 return;
             default:
                 cout << "Invalid choice" << endl;
@@ -188,7 +200,7 @@ int main() {
     string status,pass;
     label1:
     cout << "Select access type:" << endl;
-    cout << "1. Adminstrator" << endl << "2. Customer" << endl;
+    cout << "1. Adminstrator" << endl << "2. Customer" << endl << "3. Turn off" << endl;
     cin >> opr;
     switch (opr)
     {
@@ -210,9 +222,10 @@ int main() {
         customer_menu();
         goto label1;
         break;
+    case 3:
+        return 0;
     default:
         cout << "Please select available choice.";
         break;
     }
-    return 0;
 }
