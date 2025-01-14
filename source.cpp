@@ -10,10 +10,10 @@ struct Game {
 };
 
 const int n = 10;
-Game games[n];
+Game* games = new Game[n];
 int gameCount = 0;
 
-void add(string name, double price, int stock) {
+void add(const string& name, const double& price, const int& stock) {
     if (gameCount < n) {
         games[gameCount].name = name;
         games[gameCount].price = price;
@@ -24,7 +24,7 @@ void add(string name, double price, int stock) {
     }
 }
 
-void remove(string name) {
+void remove(const string& name) {
     for (int i = 0; i < gameCount; ++i) {
         if (games[i].name == name) {
             for (int j = i; j < gameCount - 1; ++j) {
@@ -37,7 +37,7 @@ void remove(string name) {
     cout << "The specified game was not found." << endl;
 }
 
-void search(string name) {
+void search(const string& name) {
     for (int i = 0; i < gameCount; ++i) {
         if (games[i].name == name) {
             cout << "Game name: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
@@ -74,6 +74,8 @@ void menu() {
         int choice;
         cin >> choice;
 
+        cin.ignore();
+
         string name;
         double price;
         int stock;
@@ -81,7 +83,7 @@ void menu() {
         switch (choice) {
             case 1:
                 cout << "Game name: ";
-                cin >> name;
+                getline(cin,name);
                 cout << "Price: ";
                 cin >> price;
                 cout << "Stock: ";
@@ -90,12 +92,12 @@ void menu() {
                 break;
             case 2:
                 cout << "Game name: ";
-                cin >> name;
+                getline(cin,name);
                 remove(name);
                 break;
             case 3:
                 cout << "Game name: ";
-                cin >> name;
+                getline(cin,name);
                 search(name);
                 break;
             case 4:
@@ -105,6 +107,7 @@ void menu() {
                 cout << "Total value of games: " << calcvalue() << endl;
                 break;
             case 6:
+                delete[] games;
                 return;
             default:
                 cout << "Invalid choice" << endl;
