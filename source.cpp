@@ -7,6 +7,7 @@ struct Game {
     string name;
     double price;
     int stock;
+    string category;
 };
 
 const int n = 10;
@@ -14,11 +15,12 @@ Game* games = new Game[n];
 int gameCount = 0;
 string PASSWORD = "admin1admin";
 
-void add(const string& name, const double& price, const int& stock) {
+void add(const string& name, const double& price, const int& stock, const string& cat) {
     if (gameCount < n) {
         games[gameCount].name = name;
         games[gameCount].price = price;
         games[gameCount].stock = stock;
+        games[gameCount].category = cat;
         gameCount++;
     } else {
         cout << "The store capacity is full." << endl;
@@ -62,7 +64,8 @@ void stockStatus () {
 void displayall() {
     if (gameCount != 0){
         for (int i = 0; i < gameCount; ++i) {
-            cout << "Game name: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
+            cout << "Game name: " << games[i].name << ", Price: " << games[i].price;
+            cout << ", Stock: " << games[i].stock << ", Category: " << games[i].category << endl;
         }
     }
     else{
@@ -94,9 +97,22 @@ void changepass (){
     cout << "Your password successfully changed." << endl;
 }
 
+int cont (){
+    int cmd;
+    cout << "If you want to continue, enter (1), otherwise press any number: ";
+    cin >> cmd;
+    if (cmd == 1){
+        return 1;
+    }
+    else{
+        return 2;
+    }
+}
+
 void admin_menu() {
     while (true) {
         cout << "-------------------------" << endl;
+        cout << "(Adminstrator menu)" << endl;
         cout << "1. Add Game" << endl;
         cout << "2. Remove Game" << endl;
         cout << "3. Search Game" << endl;
@@ -106,7 +122,7 @@ void admin_menu() {
         cout << "7. Change Password" << endl;
         cout << "8. Exit" << endl;
         
-        int choice;
+        int choice, command;
         cin >> choice;
 
         cin.ignore();
@@ -114,27 +130,53 @@ void admin_menu() {
         string name;
         double price;
         int stock;
+        string category;
         
         switch (choice) {
             case 1:
+                label1:
                 cout << "Game name: ";
+                cin.ignore();
                 getline(cin,name);
                 cout << "Price: ";
                 cin >> price;
                 cout << "Stock: ";
                 cin >> stock;
-                add(name, price, stock);
-                break;
+                cout << "Category: ";
+                cin >> category;
+                add(name, price, stock, category);
+                command = cont();
+                if (command == 1){
+                    goto label1;
+                }
+                else{
+                    break;
+                }
+
             case 2:
+                label2:
                 cout << "Game name: ";
                 getline(cin,name);
                 remove(name);
-                break;
+                command = cont();
+                if (command == 1){
+                    goto label2;
+                }
+                else{
+                    break;
+                }
             case 3:
+                label3:
                 cout << "Game name: ";
                 getline(cin,name);
                 search(name);
-                break;
+                command = cont();
+                if (command == 1){
+                    goto label3;
+                }
+                else{
+                    break;
+                }
             case 4:
                 displayall();
                 break;
@@ -159,12 +201,13 @@ void admin_menu() {
 void customer_menu() {
     while (true) {
         cout << "-------------------------" << endl;
+        cout << "(Customer menu)" << endl;
         cout << "1. Search Game" << endl;
         cout << "2. Display All Games" << endl;
         cout << "3. Stock Status" << endl;
         cout << "4. Exit" << endl;
         
-        int choice;
+        int choice, command;
         cin >> choice;
 
         cin.ignore();
@@ -175,10 +218,17 @@ void customer_menu() {
         
         switch (choice) {
             case 1:
+                label1:
                 cout << "Game name: ";
                 getline(cin,name);
                 search(name);
-                break;
+                command = cont();
+                if (command == 1){
+                    goto label1;
+                }
+                else{
+                    break;
+                }
             case 2:
                 displayall();
                 break;
