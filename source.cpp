@@ -70,7 +70,46 @@ string password (const string& pass){
     }
 }
 
-void menu() {
+void customer_menu() {
+    while (true) {
+        cout << "-------------------------" << endl;
+        cout << "1. Search Game" << endl;
+        cout << "2. Display All Games" << endl;
+        cout << "3. Stock Status" << endl;
+        cout << "4. Exit" << endl;
+        
+        int choice;
+        cin >> choice;
+
+        cin.ignore();
+
+        string name;
+        double price;
+        int stock;
+        
+        switch (choice) {
+            case 1:
+                cout << "Game name: ";
+                getline(cin,name);
+                search(name);
+                break;
+            case 2:
+                displayall();
+                break;
+            case 3:
+                cout << "The status of game stock: " << endl ;
+                //stock_status(); 
+                break;
+            case 4:
+                return;
+            default:
+                cout << "Invalid choice" << endl;
+        }
+    }
+
+}
+
+void admin_menu() {
     while (true) {
         cout << "-------------------------" << endl;
         cout << "1. Add Game" << endl;
@@ -78,7 +117,8 @@ void menu() {
         cout << "3. Search Game" << endl;
         cout << "4. Display All Games" << endl;
         cout << "5. Calculate Total Value" << endl;
-        cout << "6. Exit" << endl;
+        cout << "6. Stock Status" << endl;
+        cout << "7. Exit" << endl;
         
         int choice;
         cin >> choice;
@@ -116,7 +156,10 @@ void menu() {
                 cout << "Total value of games: " << calcvalue() << endl;
                 break;
             case 6:
-                delete[] games;
+                cout << "The status of game stock: " << endl ;
+                //stock_status(); 
+                break;
+            case 7:
                 return;
             default:
                 cout << "Invalid choice" << endl;
@@ -138,7 +181,7 @@ int main() {
         cin >> pass;
         status = password(pass);
         if (status == "correct"){
-            //admin_menu();
+            admin_menu();
             goto label1;
         }
         else {
@@ -148,7 +191,7 @@ int main() {
         break;
     
     case 2:
-        //customer_menu();
+        customer_menu();
         goto label1;
         break;
     default:
