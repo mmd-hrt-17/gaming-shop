@@ -61,6 +61,15 @@ double calcvalue() {
     return totalValue;
 }
 
+string password (const string& pass){
+    if (pass == "admin1admin"){
+        return "correct";
+    }
+    else {
+        return "wrong";
+    }
+}
+
 void menu() {
     while (true) {
         cout << "-------------------------" << endl;
@@ -116,6 +125,35 @@ void menu() {
 }
 
 int main() {
-    menu();
+    int opr;
+    string status,pass;
+    label1:
+    cout << "Select access type:" << endl;
+    cout << "1. Adminstrator" << endl << "2. Customer" << endl;
+    cin >> opr;
+    switch (opr)
+    {
+    case 1:
+        cout << "Please enter the password :" << endl;
+        cin >> pass;
+        status = password(pass);
+        if (status == "correct"){
+            //admin_menu();
+            goto label1;
+        }
+        else {
+            cout << "Wrong password." << endl << "-------------------------" << endl;
+            goto label1;
+        } 
+        break;
+    
+    case 2:
+        //customer_menu();
+        goto label1;
+        break;
+    default:
+        cout << "Please select available choice.";
+        break;
+    }
     return 0;
 }
