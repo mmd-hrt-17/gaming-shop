@@ -47,9 +47,25 @@ void search(const string& name) {
     cout << "The specified game was not found." << endl;
 }
 
+void stockStatus () {
+    if (gameCount != 0){
+        for (int i = 0; i < gameCount; ++i) {
+            cout << "Game name: " << games[i].name << ", Stock: " << games[i].stock << endl;
+        }
+    }
+    else {
+        cout << "The stock is empty." << endl;
+    }
+}
+
 void displayall() {
-    for (int i = 0; i < gameCount; ++i) {
-        cout << "Game name: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
+    if (gameCount != 0){
+        for (int i = 0; i < gameCount; ++i) {
+            cout << "Game name: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
+        }
+    }
+    else{
+        cout << "The stock is empty." << endl;
     }
 }
 
@@ -68,45 +84,6 @@ string password (const string& pass){
     else {
         return "wrong";
     }
-}
-
-void customer_menu() {
-    while (true) {
-        cout << "-------------------------" << endl;
-        cout << "1. Search Game" << endl;
-        cout << "2. Display All Games" << endl;
-        cout << "3. Stock Status" << endl;
-        cout << "4. Exit" << endl;
-        
-        int choice;
-        cin >> choice;
-
-        cin.ignore();
-
-        string name;
-        double price;
-        int stock;
-        
-        switch (choice) {
-            case 1:
-                cout << "Game name: ";
-                getline(cin,name);
-                search(name);
-                break;
-            case 2:
-                displayall();
-                break;
-            case 3:
-                cout << "The status of game stock: " << endl ;
-                //stock_status(); 
-                break;
-            case 4:
-                return;
-            default:
-                cout << "Invalid choice" << endl;
-        }
-    }
-
 }
 
 void admin_menu() {
@@ -157,7 +134,7 @@ void admin_menu() {
                 break;
             case 6:
                 cout << "The status of game stock: " << endl ;
-                //stock_status(); 
+                stockStatus(); 
                 break;
             case 7:
                 return;
@@ -165,6 +142,45 @@ void admin_menu() {
                 cout << "Invalid choice" << endl;
         }
     }
+}
+
+void customer_menu() {
+    while (true) {
+        cout << "-------------------------" << endl;
+        cout << "1. Search Game" << endl;
+        cout << "2. Display All Games" << endl;
+        cout << "3. Stock Status" << endl;
+        cout << "4. Exit" << endl;
+        
+        int choice;
+        cin >> choice;
+
+        cin.ignore();
+
+        string name;
+        double price;
+        int stock;
+        
+        switch (choice) {
+            case 1:
+                cout << "Game name: ";
+                getline(cin,name);
+                search(name);
+                break;
+            case 2:
+                displayall();
+                break;
+            case 3:
+                cout << "The status of game stock: " << endl ;
+                stockStatus(); 
+                break;
+            case 4:
+                return;
+            default:
+                cout << "Invalid choice" << endl;
+        }
+    }
+
 }
 
 int main() {
