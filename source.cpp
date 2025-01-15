@@ -11,26 +11,30 @@ struct Game {
     string category;
 };
 
+struct shoppingcart {
+    string name;
+    int count;
+    double fee;
+};
+
+
 double customer_amount = 0;
 double admin_amount = 0;
 
-vector<string> shopping_cart; 
 vector<Game> games;
+vector<shoppingcart> shopping_cart;
 
-int gameCount = 0;
 string PASSWORD = "admin1admin";
 
 void add(const string& name, const double& price, const int& stock, const string& cat) {
     Game newGame = {name, price, stock, cat}; 
     games.push_back(newGame); 
-    gameCount++;
 }
 
 void remove(const string& name) {
-    for (int i = 0; i < gameCount; ++i) { 
+    for (int i = 0; i < games.size(); ++i) { 
         if (games[i].name == name) { 
             games.erase(games.begin() + i); 
-            gameCount--; 
             return; 
         } 
     } 
@@ -38,7 +42,7 @@ void remove(const string& name) {
 }
 
 void search(const string& name) {
-    for (int i = 0; i < gameCount; ++i) {
+    for (int i = 0; i < games.size(); ++i) {
         if (games[i].name == name) {
             cout << "Game name: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
             return;
@@ -48,8 +52,8 @@ void search(const string& name) {
 }
 
 void stockStatus () {
-    if (gameCount != 0){
-        for (int i = 0; i < gameCount; ++i) {
+    if (games.size() != 0){
+        for (int i = 0; i < games.size(); ++i) {
             cout << "Game name: " << games[i].name << ", Stock: " << games[i].stock << endl;
         }
     }
@@ -59,8 +63,8 @@ void stockStatus () {
 }
 
 void displayall() {
-    if (gameCount != 0){
-        for (int i = 0; i < gameCount; ++i) {
+    if (games.size() != 0){
+        for (int i = 0; i < games.size(); ++i) {
             cout << "Game name: " << games[i].name << ", Price: " << games[i].price;
             cout << ", Stock: " << games[i].stock << ", Category: " << games[i].category << endl;
         }
@@ -72,7 +76,7 @@ void displayall() {
 
 double calcvalue() {
     double totalValue = 0;
-    for (int i = 0; i < gameCount; ++i) {
+    for (int i = 0; i < games.size(); ++i) {
         totalValue += games[i].price * games[i].stock;
     }
     return totalValue;
@@ -112,15 +116,17 @@ void charge(int sts){
     cin >> amount;
     if (sts == 1){
         customer_amount += amount;
+        cout << "Your wallet charged successfully." << endl;
     }
     else{
         admin_amount += amount;
+        cout << "Your wallet charged successfully." << endl;
     }
 }
 
 void ShowByCat(string& cat){
-    if (gameCount != 0){
-        for (int i = 0; i < gameCount; ++i) {
+    if (games.size() != 0){
+        for (int i = 0; i < games.size(); ++i) {
             if (games[i].category == cat){
                 cout << "Game name: " << games[i].name << ", Price: " << games[i].price;
                 cout << ", Stock: " << games[i].stock << endl;
@@ -128,6 +134,56 @@ void ShowByCat(string& cat){
             else {
                 cout << "There is no game in " << cat << "category." << endl;
             }
+        }
+    }
+    else{
+        cout << "The stock is empty." << endl;
+    }
+}
+
+void AddShoppingCart(){
+    string gn;
+    int st,target;
+    double totalValue;
+    cout << "Enter game name: ";
+    cin.ignore();
+    getline(cin,gn);
+    cout << "How many do you want? ";
+    cin >> st;
+    for (int i=0; i < games.size(); ++i){
+        if (games[i].name == gn){
+
+            totalValue += games[i].price * st;
+
+            if (st > games[i].stock){
+                cout << "We don't have as much stock as you want , We only have "<< games[i].stock << " in stock." << endl;
+            }
+            else if (customer_amount < totalValue){
+                cout << "Charge your wallet first, Then start shopping." << endl;
+            }
+            else {
+                shoppingcart newgame = {games[i].name,st,games[i].price};
+                shopping_cart.push_back(newgame);
+                games[i].stock -= st; 
+                customer_amount -= totalValue;
+                cout << "Your order has been added successfully." << endl;
+            }
+        }
+    }
+
+    
+
+    
+}
+
+void ShowShoppingCart(){
+    int total = 0;
+    if (shopping_cart.size() != 0){
+        for (int i = 0; i < shopping_cart.size(); ++i) {
+            cout << "Game name: " << shopping_cart[i].name << ", count: " << shopping_cart[i].count ;
+        }
+        for (int j = 0; j < shopping_cart.size(); ++j) {
+            total += ((shopping_cart[j].fee)*(shopping_cart[j].count)) ;
         }
     }
     else{
@@ -149,6 +205,7 @@ void admin_menu() {
         cout << "7. Change Password" << endl;
         cout << "8. charge Wallet" << endl;
         cout << "9. Exit" << endl;
+        cout << "-------------------------" << endl;
         
         int choice, command;
         cin >> choice;
@@ -245,7 +302,10 @@ void customer_menu() {
         cout << "3. Stock Status" << endl;
         cout << "4. Charge Wallet" << endl;
         cout << "5. Search By Category" << endl;
-        cout << "6. Exit" << endl;
+        cout << "6. Buy Games" << endl;
+        cout << "7. Show Shopping Cart" << endl;
+        cout << "8. Exit" << endl;
+        cout << "-------------------------" << endl;
         
         int choice, command;
         cin >> choice;
@@ -298,6 +358,18 @@ void customer_menu() {
                     break;
                 }
             case 6:
+                AddShoppingCart();
+                command = cont();
+                if (command == 1){
+                    goto label1;
+                }
+                else{
+                    break;
+                }
+            case 7:
+                ShowShoppingCart();
+                break;
+            case 8:
                 return;
             default:
                 cout << "Invalid choice" << endl;
@@ -310,6 +382,7 @@ int main() {
     int opr;
     string status,pass;
     label1:
+    cout << "-------------------------" << endl;
     cout << "Select access type:" << endl;
     cout << "1. Adminstrator" << endl << "2. Customer" << endl << "3. Turn off" << endl;
     cin >> opr;
