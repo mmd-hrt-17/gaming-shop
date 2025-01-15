@@ -118,6 +118,23 @@ void charge(int sts){
     }
 }
 
+void ShowByCat(string& cat){
+    if (gameCount != 0){
+        for (int i = 0; i < gameCount; ++i) {
+            if (games[i].category == cat){
+                cout << "Game name: " << games[i].name << ", Price: " << games[i].price;
+                cout << ", Stock: " << games[i].stock << endl;
+            }
+            else {
+                cout << "There is no game in " << cat << "category." << endl;
+            }
+        }
+    }
+    else{
+        cout << "The stock is empty." << endl;
+    }
+}
+
 void admin_menu() {
     while (true) {
         cout << "-------------------------" << endl;
@@ -227,16 +244,18 @@ void customer_menu() {
         cout << "2. Display All Games" << endl;
         cout << "3. Stock Status" << endl;
         cout << "4. Charge Wallet" << endl;
-        cout << "5. Exit" << endl;
+        cout << "5. Search By Category" << endl;
+        cout << "6. Exit" << endl;
         
         int choice, command;
         cin >> choice;
 
         cin.ignore();
 
-        string name;
+        string name,category;
         double price;
         int stock;
+
         
         switch (choice) {
             case 1:
@@ -268,6 +287,17 @@ void customer_menu() {
                     break;
                 }
             case 5:
+                cout << "Enter your desire category: ";
+                cin >> category;
+                ShowByCat(category);
+                command = cont();
+                if (command == 1){
+                    goto label1;
+                }
+                else{
+                    break;
+                }
+            case 6:
                 return;
             default:
                 cout << "Invalid choice" << endl;
