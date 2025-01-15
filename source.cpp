@@ -3,7 +3,6 @@
 #include <vector>
 
 using namespace std;
-
 struct Game {
     string name;
     double price;
@@ -17,7 +16,6 @@ struct shoppingcart {
     double fee;
 };
 
-
 double customer_amount = 0;
 double admin_amount = 0;
 
@@ -26,10 +24,12 @@ vector<shoppingcart> shopping_cart;
 
 string PASSWORD = "admin1admin";
 
+
 void add(const string& name, const double& price, const int& stock, const string& cat) {
     Game newGame = {name, price, stock, cat}; 
     games.push_back(newGame); 
 }
+
 
 void remove(const string& name) {
     for (int i = 0; i < games.size(); ++i) { 
@@ -41,6 +41,7 @@ void remove(const string& name) {
     cout << "The specified game was not found." << endl;
 }
 
+
 void search(const string& name) {
     for (int i = 0; i < games.size(); ++i) {
         if (games[i].name == name) {
@@ -50,6 +51,7 @@ void search(const string& name) {
     }
     cout << "The specified game was not found." << endl;
 }
+
 
 void stockStatus () {
     if (games.size() != 0){
@@ -61,6 +63,7 @@ void stockStatus () {
         cout << "The stock is empty." << endl;
     }
 }
+
 
 void displayall() {
     if (games.size() != 0){
@@ -74,6 +77,7 @@ void displayall() {
     }
 }
 
+
 double calcvalue() {
     double totalValue = 0;
     for (int i = 0; i < games.size(); ++i) {
@@ -81,6 +85,7 @@ double calcvalue() {
     }
     return totalValue;
 }
+
 
 string password (const string& pass){
     if (pass == PASSWORD){
@@ -91,12 +96,14 @@ string password (const string& pass){
     }
 }
 
+
 void changepass (){
     cout << "Your current password: " << PASSWORD << endl;
     cout << "Please enter the new password: " << endl;
     getline(cin,PASSWORD);
     cout << "Your password successfully changed." << endl;
 }
+
 
 int cont (){
     int cmd;
@@ -109,6 +116,7 @@ int cont (){
         return 2;
     }
 }
+
 
 void charge(int sts){
     double amount;
@@ -123,6 +131,7 @@ void charge(int sts){
         cout << "Your wallet charged successfully." << endl;
     }
 }
+
 
 void ShowByCat(string& cat){
     if (games.size() != 0){
@@ -141,15 +150,22 @@ void ShowByCat(string& cat){
     }
 }
 
+
 void AddShoppingCart(){
+    
     string gn;
     int st,target;
     double totalValue;
+
     cout << "Enter game name: ";
+
     cin.ignore();
     getline(cin,gn);
+
     cout << "How many do you want? ";
+
     cin >> st;
+
     for (int i=0; i < games.size(); ++i){
         if (games[i].name == gn){
 
@@ -158,9 +174,11 @@ void AddShoppingCart(){
             if (st > games[i].stock){
                 cout << "We don't have as much stock as you want , We only have "<< games[i].stock << " in stock." << endl;
             }
+
             else if (customer_amount < totalValue){
                 cout << "Charge your wallet first, Then start shopping." << endl;
             }
+
             else {
                 shoppingcart newgame = {games[i].name,st,games[i].price};
                 shopping_cart.push_back(newgame);
@@ -169,23 +187,24 @@ void AddShoppingCart(){
                 cout << "Your order has been added successfully." << endl;
             }
         }
-    }
-
-    
-
-    
+    }    
 }
 
 void ShowShoppingCart(){
+
     int total = 0;
+
     if (shopping_cart.size() != 0){
         for (int i = 0; i < shopping_cart.size(); ++i) {
-            cout << "Game name: " << shopping_cart[i].name << ", count: " << shopping_cart[i].count ;
+            cout << "Game name: " << shopping_cart[i].name << ", count: " << shopping_cart[i].count << endl;
         }
+
         for (int j = 0; j < shopping_cart.size(); ++j) {
             total += ((shopping_cart[j].fee)*(shopping_cart[j].count)) ;
         }
+        cout << "Total price: " << total << endl;
     }
+
     else{
         cout << "The stock is empty." << endl;
     }
@@ -209,8 +228,6 @@ void admin_menu() {
         
         int choice, command;
         cin >> choice;
-
-        cin.ignore();
 
         string name;
         double price;
@@ -241,6 +258,7 @@ void admin_menu() {
             case 2:
                 label2:
                 cout << "Game name: ";
+                cin.ignore();
                 getline(cin,name);
                 remove(name);
                 command = cont();
@@ -250,9 +268,11 @@ void admin_menu() {
                 else{
                     break;
                 }
+
             case 3:
                 label3:
                 cout << "Game name: ";
+                cin.ignore();
                 getline(cin,name);
                 search(name);
                 command = cont();
@@ -262,19 +282,24 @@ void admin_menu() {
                 else{
                     break;
                 }
+
             case 4:
                 displayall();
                 break;
+
             case 5:
                 cout << "Total value of games: " << calcvalue() << endl;
                 break;
+
             case 6:
                 cout << "The status of game stock: " << endl ;
                 stockStatus(); 
                 break;
+
             case 7:
                 changepass();
                 break;
+
             case 8:
                 charge(2);
                 command = cont();
@@ -284,8 +309,10 @@ void admin_menu() {
                 else{
                     break;
                 }
+
             case 9:
                 return;
+
             default:
                 cout << "Invalid choice" << endl;
         }
@@ -310,17 +337,15 @@ void customer_menu() {
         int choice, command;
         cin >> choice;
 
-        cin.ignore();
-
         string name,category;
         double price;
         int stock;
 
-        
         switch (choice) {
             case 1:
                 label1:
                 cout << "Game name: ";
+                cin.ignore();
                 getline(cin,name);
                 search(name);
                 command = cont();
@@ -330,13 +355,16 @@ void customer_menu() {
                 else{
                     break;
                 }
+
             case 2:
                 displayall();
                 break;
+
             case 3:
                 cout << "The status of game stock: " << endl ;
                 stockStatus(); 
                 break;
+
             case 4:
                 charge(1);
                 command = cont();
@@ -346,6 +374,7 @@ void customer_menu() {
                 else{
                     break;
                 }
+
             case 5:
                 cout << "Enter your desire category: ";
                 cin >> category;
@@ -357,6 +386,7 @@ void customer_menu() {
                 else{
                     break;
                 }
+
             case 6:
                 AddShoppingCart();
                 command = cont();
@@ -366,11 +396,14 @@ void customer_menu() {
                 else{
                     break;
                 }
+
             case 7:
                 ShowShoppingCart();
                 break;
+
             case 8:
                 return;
+
             default:
                 cout << "Invalid choice" << endl;
         }
@@ -379,12 +412,16 @@ void customer_menu() {
 }
 
 int main() {
+
     int opr;
     string status,pass;
+
     label1:
     cout << "-------------------------" << endl;
     cout << "Select access type:" << endl;
     cout << "1. Adminstrator" << endl << "2. Customer" << endl << "3. Turn off" << endl;
+    cout << "-------------------------" << endl;
+
     cin >> opr;
     switch (opr)
     {
@@ -406,8 +443,10 @@ int main() {
         customer_menu();
         goto label1;
         break;
+
     case 3:
         return 0;
+
     default:
         cout << "Please select available choice.";
         break;
