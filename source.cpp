@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -10,33 +11,29 @@ struct Game {
     string category;
 };
 
-const int n = 10;
-Game* games = new Game[n];
+double customer_amount = 0;
+double admin_amount = 0;
+
+vector<string> shopping_cart; 
+vector<Game> games;
+
 int gameCount = 0;
 string PASSWORD = "admin1admin";
 
 void add(const string& name, const double& price, const int& stock, const string& cat) {
-    if (gameCount < n) {
-        games[gameCount].name = name;
-        games[gameCount].price = price;
-        games[gameCount].stock = stock;
-        games[gameCount].category = cat;
-        gameCount++;
-    } else {
-        cout << "The store capacity is full." << endl;
-    }
+    Game newGame = {name, price, stock, cat}; 
+    games.push_back(newGame); 
+    gameCount++;
 }
 
 void remove(const string& name) {
-    for (int i = 0; i < gameCount; ++i) {
-        if (games[i].name == name) {
-            for (int j = i; j < gameCount - 1; ++j) {
-                games[j] = games[j + 1];
-            }
-            gameCount--;
-            return;
-        }
-    }
+    for (int i = 0; i < gameCount; ++i) { 
+        if (games[i].name == name) { 
+            games.erase(games.begin() + i); 
+            gameCount--; 
+            return; 
+        } 
+    } 
     cout << "The specified game was not found." << endl;
 }
 
@@ -109,10 +106,23 @@ int cont (){
     }
 }
 
+void charge(int sts){
+    double amount;
+    cout << "Enter the desire amount: ";
+    cin >> amount;
+    if (sts == 1){
+        customer_amount += amount;
+    }
+    else{
+        admin_amount += amount;
+    }
+}
+
 void admin_menu() {
     while (true) {
         cout << "-------------------------" << endl;
         cout << "(Adminstrator menu)" << endl;
+        cout << "Total Credit: " << admin_amount << endl;
         cout << "1. Add Game" << endl;
         cout << "2. Remove Game" << endl;
         cout << "3. Search Game" << endl;
@@ -120,7 +130,8 @@ void admin_menu() {
         cout << "5. Calculate Total Value" << endl;
         cout << "6. Stock Status" << endl;
         cout << "7. Change Password" << endl;
-        cout << "8. Exit" << endl;
+        cout << "8. charge Wallet" << endl;
+        cout << "9. Exit" << endl;
         
         int choice, command;
         cin >> choice;
@@ -191,6 +202,15 @@ void admin_menu() {
                 changepass();
                 break;
             case 8:
+                charge(2);
+                command = cont();
+                if (command == 1){
+                    goto label1;
+                }
+                else{
+                    break;
+                }
+            case 9:
                 return;
             default:
                 cout << "Invalid choice" << endl;
@@ -202,10 +222,12 @@ void customer_menu() {
     while (true) {
         cout << "-------------------------" << endl;
         cout << "(Customer menu)" << endl;
+        cout << "Total Credit: " << customer_amount << endl;
         cout << "1. Search Game" << endl;
         cout << "2. Display All Games" << endl;
         cout << "3. Stock Status" << endl;
-        cout << "4. Exit" << endl;
+        cout << "4. Charge Wallet" << endl;
+        cout << "5. Exit" << endl;
         
         int choice, command;
         cin >> choice;
@@ -237,6 +259,15 @@ void customer_menu() {
                 stockStatus(); 
                 break;
             case 4:
+                charge(1);
+                command = cont();
+                if (command == 1){
+                    goto label1;
+                }
+                else{
+                    break;
+                }
+            case 5:
                 return;
             default:
                 cout << "Invalid choice" << endl;
