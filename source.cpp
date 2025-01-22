@@ -20,7 +20,9 @@ double customer_amount = 0;
 double admin_amount = 0;
 
 vector<Game> games;
-vector<shoppingcart> shopping_cart;
+
+const int n = 10;
+shoppingcart* shopping_cart = new shoppingcart[n];
 
 string PASSWORD = "admin1admin";
 
@@ -180,8 +182,10 @@ void AddShoppingCart(){
             }
 
             else {
-                shoppingcart newgame = {games[i].name,st,games[i].price};
-                shopping_cart.push_back(newgame);
+                shopping_cart[i].name = games[i].name;
+                shopping_cart[i].count = st;
+                shopping_cart[i].fee = games[i].price;
+                
                 games[i].stock -= st; 
                 customer_amount -= totalValue;
                 cout << "Your order has been added successfully." << endl;
@@ -194,12 +198,12 @@ void ShowShoppingCart(){
 
     int total = 0;
 
-    if (shopping_cart.size() != 0){
-        for (int i = 0; i < shopping_cart.size(); ++i) {
+    if (n != 0){
+        for (int i = 0; i < n; ++i) {
             cout << "Game name: " << shopping_cart[i].name << ", count: " << shopping_cart[i].count << endl;
         }
 
-        for (int j = 0; j < shopping_cart.size(); ++j) {
+        for (int j = 0; j < n; ++j) {
             total += ((shopping_cart[j].fee)*(shopping_cart[j].count)) ;
         }
         cout << "Total price: " << total << endl;
