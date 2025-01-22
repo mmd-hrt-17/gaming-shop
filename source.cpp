@@ -27,6 +27,7 @@ shoppingcart* shopping_cart = new shoppingcart[n];
 string PASSWORD = "admin1admin";
 
 
+//add games , run only with adminstrator
 void add(const string& name, const double& price, const int& stock, const string& cat) {
     Game newGame = {name, price, stock, cat}; 
     games.push_back(newGame); 
@@ -106,7 +107,7 @@ void changepass (){
     cout << "Your password successfully changed." << endl;
 }
 
-
+// continue or not function , run after every operation
 int cont (){
     int cmd;
     cout << "If you want to continue, enter (1), otherwise press any number: ";
@@ -119,7 +120,7 @@ int cont (){
     }
 }
 
-
+//charge wallet for adminstrator & customer
 void charge(int sts){
     double amount;
     cout << "Enter the desire amount: ";
@@ -134,7 +135,7 @@ void charge(int sts){
     }
 }
 
-
+//show all games in selected category
 void ShowByCat(string& cat){
     if (games.size() != 0){
         for (int i = 0; i < games.size(); ++i) {
@@ -152,7 +153,7 @@ void ShowByCat(string& cat){
     }
 }
 
-
+//add games in the shopping cart
 void AddShoppingCart(){
     
     string gn;
@@ -194,6 +195,7 @@ void AddShoppingCart(){
     }    
 }
 
+//show the games in shopping cart
 void ShowShoppingCart(){
 
     int total = 0;
