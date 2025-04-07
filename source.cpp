@@ -1,460 +1,277 @@
 #include <iostream>
-#include <string>
 #include <vector>
+#include <string>
 
 using namespace std;
-struct Game {
-    string name;
-    double price;
-    int stock;
-    string category;
-};
-
-struct shoppingcart {
-    string name;
-    int count;
-    double fee;
-};
-
-double customer_amount = 0;
-double admin_amount = 0;
-
-vector<Game> games;
-
-const int n = 10;
-shoppingcart* shopping_cart = new shoppingcart[n];
-
-string PASSWORD = "admin1admin";
 
 
-//add games , run only with adminstrator
-void add(const string& name, const double& price, const int& stock, const string& cat) {
-    Game newGame = {name, price, stock, cat}; 
-    games.push_back(newGame); 
-}
-
-
-void remove(const string& name) {
-    for (int i = 0; i < games.size(); ++i) { 
-        if (games[i].name == name) { 
-            games.erase(games.begin() + i); 
-            return; 
-        } 
-    } 
-    cout << "The specified game was not found." << endl;
-}
-
-
-void search(const string& name) {
-    for (int i = 0; i < games.size(); ++i) {
-        if (games[i].name == name) {
-            cout << "Game name: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
-            return;
-        }
-    }
-    cout << "The specified game was not found." << endl;
-}
-
-
-void stockStatus () {
-    if (games.size() != 0){
-        for (int i = 0; i < games.size(); ++i) {
-            cout << "Game name: " << games[i].name << ", Stock: " << games[i].stock << endl;
-        }
-    }
-    else {
-        cout << "The stock is empty." << endl;
-    }
-}
-
-
-void displayall() {
-    if (games.size() != 0){
-        for (int i = 0; i < games.size(); ++i) {
-            cout << "Game name: " << games[i].name << ", Price: " << games[i].price;
-            cout << ", Stock: " << games[i].stock << ", Category: " << games[i].category << endl;
-        }
-    }
-    else{
-        cout << "The stock is empty." << endl;
-    }
-}
-
-
-double calcvalue() {
-    double totalValue = 0;
-    for (int i = 0; i < games.size(); ++i) {
-        totalValue += games[i].price * games[i].stock;
-    }
-    return totalValue;
-}
-
-
-string password (const string& pass){
-    if (pass == PASSWORD){
-        return "correct";
-    }
-    else {
-        return "wrong";
-    }
-}
-
-
-void changepass (){
-    cout << "Your current password: " << PASSWORD << endl;
-    cout << "Please enter the new password: " << endl;
-    getline(cin,PASSWORD);
-    cout << "Your password successfully changed." << endl;
-}
-
-// continue or not function , run after every operation
-int cont (){
-    int cmd;
-    cout << "If you want to continue, enter (1), otherwise press any number: ";
-    cin >> cmd;
-    if (cmd == 1){
-        return 1;
-    }
-    else{
-        return 2;
-    }
-}
-
-//charge wallet for adminstrator & customer
-void charge(int sts){
-    double amount;
-    cout << "Enter the desire amount: ";
-    cin >> amount;
-    if (sts == 1){
-        customer_amount += amount;
-        cout << "Your wallet charged successfully." << endl;
-    }
-    else{
-        admin_amount += amount;
-        cout << "Your wallet charged successfully." << endl;
-    }
-}
-
-//show all games in selected category
-void ShowByCat(string& cat){
-    if (games.size() != 0){
-        for (int i = 0; i < games.size(); ++i) {
-            if (games[i].category == cat){
-                cout << "Game name: " << games[i].name << ", Price: " << games[i].price;
-                cout << ", Stock: " << games[i].stock << endl;
-            }
-            else {
-                cout << "There is no game in " << cat << "category." << endl;
-            }
-        }
-    }
-    else{
-        cout << "The stock is empty." << endl;
-    }
-}
-
-//add games in the shopping cart
-void AddShoppingCart(){
-    
-    string gn;
-    int st,target;
-    double totalValue;
-
-    cout << "Enter game name: ";
-
-    cin.ignore();
-    getline(cin,gn);
-
-    cout << "How many do you want? ";
-
-    cin >> st;
-
-    for (int i=0; i < games.size(); ++i){
-        if (games[i].name == gn){
-
-            totalValue += games[i].price * st;
-
-            if (st > games[i].stock){
-                cout << "We don't have as much stock as you want , We only have "<< games[i].stock << " in stock." << endl;
-            }
-
-            else if (customer_amount < totalValue){
-                cout << "Charge your wallet first, Then start shopping." << endl;
-            }
-
-            else {
-                shopping_cart[i].name = games[i].name;
-                shopping_cart[i].count = st;
-                shopping_cart[i].fee = games[i].price;
-                
-                games[i].stock -= st; 
-                customer_amount -= totalValue;
-                cout << "Your order has been added successfully." << endl;
-            }
-        }
-    }    
-}
-
-//show the games in shopping cart
-void ShowShoppingCart(){
-
-    int total = 0;
-
-    if (n != 0){
-        for (int i = 0; i < n; ++i) {
-            cout << "Game name: " << shopping_cart[i].name << ", count: " << shopping_cart[i].count << endl;
-        }
-
-        for (int j = 0; j < n; ++j) {
-            total += ((shopping_cart[j].fee)*(shopping_cart[j].count)) ;
-        }
-        cout << "Total price: " << total << endl;
-    }
-
-    else{
-        cout << "The stock is empty." << endl;
-    }
-}
-
-void admin_menu() {
-    while (true) {
-        cout << "-------------------------" << endl;
-        cout << "(Adminstrator menu)" << endl;
-        cout << "Total Credit: " << admin_amount << endl;
-        cout << "1. Add Game" << endl;
-        cout << "2. Remove Game" << endl;
-        cout << "3. Search Game" << endl;
-        cout << "4. Display All Games" << endl;
-        cout << "5. Calculate Total Value" << endl;
-        cout << "6. Stock Status" << endl;
-        cout << "7. Change Password" << endl;
-        cout << "8. charge Wallet" << endl;
-        cout << "9. Exit" << endl;
-        cout << "-------------------------" << endl;
-        
-        int choice, command;
-        cin >> choice;
-
+class Game {
+    public:
         string name;
         double price;
         int stock;
         string category;
-        
-        switch (choice) {
-            case 1:
-                label1:
-                cout << "Game name: ";
-                cin.ignore();
-                getline(cin,name);
-                cout << "Price: ";
-                cin >> price;
-                cout << "Stock: ";
-                cin >> stock;
-                cout << "Category: ";
-                cin >> category;
-                add(name, price, stock, category);
-                command = cont();
-                if (command == 1){
-                    goto label1;
-                }
-                else{
-                    break;
-                }
+    };
+    
+class CartItem {
+    public:
+        string name;
+        int count;
+        double fee;
+    };
 
-            case 2:
-                label2:
-                cout << "Game name: ";
-                cin.ignore();
-                getline(cin,name);
-                remove(name);
-                command = cont();
-                if (command == 1){
-                    goto label2;
-                }
-                else{
-                    break;
-                }
 
-            case 3:
-                label3:
-                cout << "Game name: ";
-                cin.ignore();
-                getline(cin,name);
-                search(name);
-                command = cont();
-                if (command == 1){
-                    goto label3;
-                }
-                else{
-                    break;
-                }
+class Store {
 
-            case 4:
-                displayall();
-                break;
+    private:
+    Game games[100];
+    int gameCount = 0;
 
-            case 5:
-                cout << "Total value of games: " << calcvalue() << endl;
-                break;
+    CartItem cart[100];
+    int cartCount = 0;
 
-            case 6:
-                cout << "The status of game stock: " << endl ;
-                stockStatus(); 
-                break;
+    double cust_wallet = 0, admin_wallet = 0;
 
-            case 7:
-                changepass();
-                break;
-
-            case 8:
-                charge(2);
-                command = cont();
-                if (command == 1){
-                    goto label1;
-                }
-                else{
-                    break;
-                }
-
-            case 9:
-                return;
-
-            default:
-                cout << "Invalid choice" << endl;
+    string password = "admin1admin";
+    
+    //---------------------
+    public:
+    void chargeWallet(string rule) {
+        double amount;
+        if (rule == "admin"){
+            cout << "Enter the amount to charge: ";
+            cin >> amount;
+            admin_wallet += amount;
+            cout << "Wallet charged successfully." << endl;
         }
-    }
-}
-
-void customer_menu() {
-    while (true) {
-        cout << "-------------------------" << endl;
-        cout << "(Customer menu)" << endl;
-        cout << "Total Credit: " << customer_amount << endl;
-        cout << "1. Search Game" << endl;
-        cout << "2. Display All Games" << endl;
-        cout << "3. Stock Status" << endl;
-        cout << "4. Charge Wallet" << endl;
-        cout << "5. Search By Category" << endl;
-        cout << "6. Buy Games" << endl;
-        cout << "7. Show Shopping Cart" << endl;
-        cout << "8. Exit" << endl;
-        cout << "-------------------------" << endl;
-        
-        int choice, command;
-        cin >> choice;
-
-        string name,category;
-        double price;
-        int stock;
-
-        switch (choice) {
-            case 1:
-                label1:
-                cout << "Game name: ";
-                cin.ignore();
-                getline(cin,name);
-                search(name);
-                command = cont();
-                if (command == 1){
-                    goto label1;
-                }
-                else{
-                    break;
-                }
-
-            case 2:
-                displayall();
-                break;
-
-            case 3:
-                cout << "The status of game stock: " << endl ;
-                stockStatus(); 
-                break;
-
-            case 4:
-                charge(1);
-                command = cont();
-                if (command == 1){
-                    goto label1;
-                }
-                else{
-                    break;
-                }
-
-            case 5:
-                cout << "Enter your desire category: ";
-                cin >> category;
-                ShowByCat(category);
-                command = cont();
-                if (command == 1){
-                    goto label1;
-                }
-                else{
-                    break;
-                }
-
-            case 6:
-                AddShoppingCart();
-                command = cont();
-                if (command == 1){
-                    goto label1;
-                }
-                else{
-                    break;
-                }
-
-            case 7:
-                ShowShoppingCart();
-                break;
-
-            case 8:
-                return;
-
-            default:
-                cout << "Invalid choice" << endl;
+        else if (rule == "cust"){
+            cout << "Enter the amount to charge: ";
+            cin >> amount;
+            cust_wallet += amount;
+            cout << "Wallet charged successfully." << endl;
         }
     }
 
-}
+    void addGame(){
+        cout << "Enter game name: ";
+        cin.ignore();
+        getline(cin, games[gameCount].name);
+        cout << "Enter price: ";
+        cin >> games[gameCount].price;
+        cout << "Enter stock: ";
+        cin >> games[gameCount].stock;
+        cout << "Enter category: ";
+        cin >> games[gameCount].category;
+        gameCount++;
+        cout << "Game added successfully." << endl;
+    }
+
+    void removeGame() {
+        string name;
+        cin.ignore();
+        cout << "Enter the name of the game you want to remove: ";
+        getline(cin, name);
+        for (int i = 0; i < gameCount; i++) {
+            if (games[i].name == name) {
+                for (int j = i; j < gameCount - 1; j++) {
+                    games[j] = games[j + 1];
+                }
+                gameCount--;
+                cout << "Game removed." << endl;
+                return;
+            }
+        }
+        cout << "Game not found." << endl;
+    }
+
+    void searchGame() {
+        string name;
+        cin.ignore();
+        cout << "Enter game name: ";
+        getline(cin, name);
+        for (int i = 0; i < gameCount; i++) {
+            if (games[i].name == name) {
+                cout << "Game found: " << games[i].name << ", Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
+                return;
+            }
+        }
+        cout << "Game not found." << endl;
+    }
+
+    void displayGames() {
+        if (gameCount == 0) {
+            cout << "No games available." << endl;
+            return;
+        }
+        for (int i = 0; i < gameCount; i++) {
+            cout << games[i].name << " | " << games[i].price << " | " << games[i].stock << " | " << games[i].category << endl;
+        }
+    }
+
+    void displayStockStatus() {
+        for (int i = 0; i < gameCount; i++) {
+            cout << games[i].name << " - Stock: " << games[i].stock << endl;
+        }
+    }
+
+    void calculateTotalValue() {
+        double total = 0;
+        for (int i = 0; i < gameCount; i++) {
+            total += games[i].price * games[i].stock;
+        }
+        cout << "Total value of inventory: " << total << endl;
+    }
+
+    void showByCategory() {
+        string cat;
+        cout << "Enter category: ";
+        cin >> cat;
+        for (int i = 0; i < gameCount; i++) {
+            if (games[i].category == cat) {
+                cout << games[i].name << " - Price: " << games[i].price << ", Stock: " << games[i].stock << endl;
+            }
+        }
+    }
+
+    void buyGame() {
+        string name;
+        int count;
+        cin.ignore();
+        cout << "Enter game name: ";
+        getline(cin, name);
+        cout << "Enter quantity: ";
+        cin >> count;
+
+        for (int i = 0; i < gameCount; i++) {
+            if (games[i].name == name) {
+                if (count <= games[i].stock) {
+                    double total = count * games[i].price;
+                    if (cust_wallet >= total) {
+                        cart[cartCount].name = games[i].name;
+                        cart[cartCount].count = count;
+                        cart[cartCount].fee = games[i].price;
+                        cartCount++;
+                        cust_wallet -= total;
+                        games[i].stock -= count;
+                        cout << "Item added to cart." << endl;
+                        return;
+                    } else {
+                        cout << "Insufficient balance. Please charge your wallet." << endl;
+                        return;
+                    }
+                } else {
+                    cout << "Insufficient stock. Only " << games[i].stock << " available." << endl;
+                    return;
+                }
+            }
+        }
+        cout << "Game not found." << endl;
+    }
+
+    void showCart() {
+        double sum = 0;
+        if (cartCount == 0) {
+            cout << "Shopping cart is empty." << endl;
+            return;
+        }
+
+        for (int i = 0; i < cartCount; i++) {
+            cout << "Game: " << cart[i].name << ", Count: " << cart[i].count << endl;
+            sum += cart[i].count * cart[i].fee;
+        }
+        cout << "Total: " << sum << endl;
+    }
+
+    void adminMenu() {
+        string pass;
+        cout << "Enter admin password: ";
+        cin >> pass;
+        if (pass != password) {
+            cout << "Incorrect password." << endl;
+            return;
+        }
+
+        int option;
+        while (true) {
+            cout << "-------------------------" << endl;
+            cout << "(Adminstrator menu)" << endl;
+            cout << "Total Credit: " << admin_wallet << endl;
+            cout << "1. Add Game" << endl;
+            cout << "2. Remove Game" << endl;
+            cout << "3. Search Game" << endl;
+            cout << "4. Display All Games" << endl;
+            cout << "5. Calculate Total Value" << endl;
+            cout << "6. Stock Status" << endl;
+            cout << "7. Change Password" << endl;
+            cout << "8. charge Wallet" << endl;
+            cout << "9. Exit" << endl;
+            cout << "-------------------------" << endl;
+            cin >> option;
+            switch (option) {
+                case 1: 
+                    addGame();
+                    break;
+                case 2: 
+                    removeGame(); 
+                    break;
+                case 3: 
+                    searchGame(); 
+                    break;
+                case 4: 
+                    displayGames(); 
+                    break;
+                case 5: 
+                    displayStockStatus(); 
+                    break;
+                case 6: 
+                    calculateTotalValue(); 
+                    break;
+                case 7: 
+                    changePassword(); 
+                    break;
+                case 8: 
+                    chargeWallet("admin"); 
+                    break;
+                case 9: 
+                    return;
+                default: cout << "Invalid choice." << endl;
+            }
+        }
+    }
+
+    void changePassword() {
+        cout << "Enter new password: ";
+        cin.ignore();
+        getline(cin, password);
+        cout << "Password changed." << endl;
+
+    }
+};
 
 int main() {
 
+    Store store;
     int opr;
-    string status,pass;
+    while (true) {
+        cout << "-------------------------" << endl;
+        cout << "Select access type:" << endl;
+        cout << "1. Adminstrator" << endl << "2. Customer" << endl << "3. Turn off" << endl;
+        cout << "-------------------------" << endl;
+        cin >> opr;
+        switch (opr) {
+            case 1: 
+                store.adminMenu(); 
+                break;
 
-    label1:
-    cout << "-------------------------" << endl;
-    cout << "Select access type:" << endl;
-    cout << "1. Adminstrator" << endl << "2. Customer" << endl << "3. Turn off" << endl;
-    cout << "-------------------------" << endl;
+            /*case 2: 
+                store.customerMenu(); 
+                break;*/
 
-    cin >> opr;
-    switch (opr)
-    {
-    case 1:
-        cout << "Please enter the password :" << endl;
-        cin >> pass;
-        status = password(pass);
-        if (status == "correct"){
-            admin_menu();
-            goto label1;
+            case 3: 
+                return 0;
+            
+                default: 
+                cout << "Invalid choice." << endl;
         }
-        else {
-            cout << "Wrong password." << endl << "-------------------------" << endl;
-            goto label1;
-        } 
-        break;
-    
-    case 2:
-        customer_menu();
-        goto label1;
-        break;
-
-    case 3:
-        return 0;
-
-    default:
-        cout << "Please select available choice.";
-        break;
     }
 }
